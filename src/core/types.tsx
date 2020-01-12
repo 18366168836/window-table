@@ -44,6 +44,10 @@ export type WindowTableProps<T> = {
   debounceWait?: number;
   headerCellInnerElementType?: string;
   tableCellInnerElementType?: string;
+  onTableScroll(arg: any): void;
+  empty?: React.ElementType;
+  loading?: false;
+  Spin?: React.ElementType;
 };
 
 export interface RowCellsProps {

@@ -11,7 +11,7 @@ import {
 import { Html5Table } from '../../../src';
 import { getData, columns } from '../../Demo/helpers';
 
-const data = getData(50000);
+const data = getData(10);
 
 const handlers = {
   setState: null,
@@ -46,6 +46,19 @@ export default function ShinobiTable() {
             className="table-sm table-hover"
             headerClassName="thead-dark"
             height={250}
+            onTableScroll={arg => {
+              const {
+                scrollDirection,
+                scrollOffset,
+                scrollUpdateWasRequested,
+              } = arg;
+              console.log(
+                'arg',
+                scrollDirection,
+                scrollOffset,
+                scrollUpdateWasRequested
+              );
+            }}
           />
         </CardBody>
         <CardFooter css={{ borderWidth: '5px', borderColor: state.color }}>

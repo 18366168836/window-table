@@ -119,7 +119,7 @@ const HeaderRowRenderer: React.FunctionComponent<HeaderRowProps> = ({
 
   return (
     <Header
-      className={`${classNamePrefix}table-header`}
+      className={`${classNamePrefix}table-thead`}
       style={{ backgroundColor: color }}
     >
       <HeaderRow
@@ -127,7 +127,7 @@ const HeaderRowRenderer: React.FunctionComponent<HeaderRowProps> = ({
           display: 'flex',
           width: `calc(100% - ${rowWidthOffset}px)`,
         }}
-        className={`${classNamePrefix}table-header-row`}
+        className={`${classNamePrefix}table-head-row`}
         ref={rowRef}
       >
         {children}
@@ -141,7 +141,7 @@ const HeaderRowRenderer: React.FunctionComponent<HeaderRowProps> = ({
                 display: 'inline-block',
                 flexGrow: width,
               }}
-              className={`${classNamePrefix}table-header-cell`}
+              className={`${classNamePrefix}table-head-cell`}
               column={column}
             >
               {title}
@@ -176,6 +176,10 @@ function WindowTable<T = any>({
   debounceWait = 0,
   headerCellInnerElementType = 'div',
   tableCellInnerElementType = 'div',
+  onTableScroll,
+  empty,
+  loading,
+  Spin,
   ...rest
 }: WindowTableProps<T>) {
   const measurerRowRef = useRef<HTMLElement>(null);
@@ -199,7 +203,7 @@ function WindowTable<T = any>({
 
   const TableBody: React.FunctionComponent = ({ children, ...props }) => (
     <Table {...props} className={tableClassName}>
-      <Body className={`${classNamePrefix}table-body`}>{children}</Body>
+      <Body className={`${classNamePrefix}table-tbody`}>{children}</Body>
     </Table>
   );
 
@@ -218,6 +222,8 @@ function WindowTable<T = any>({
     rowWidthOffset,
   };
 
+  const EmptyNode: React.ReactNode = empty || <span>无数据</span>;
+  const SpinComponent: React.ReactNode = Spin || <span>loading</span>;
   return (
     <div
       style={{
@@ -227,8 +233,23 @@ function WindowTable<T = any>({
         maxHeight: '100vh', // By default, table height will be bounded by 100% of viewport height
         ...style,
       }}
+      className={`${classNamePrefix}table-outer-wrapper`}
       {...rest}
     >
+      <div
+        className={[
+          `${classNamePrefix}table-spin`,
+          loading ? 'loading' : '',
+        ].join(' ')}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          left: 0,
+        }}
+      >
+        {SpinComponent}
+      </div>
       {!rowHeight && !!data.length && (
         /*Measure row height only if not supplied explicitly*/
         <Table
@@ -259,7 +280,7 @@ function WindowTable<T = any>({
             </HeaderRowRenderer>
           </TableContext.Provider>
           <Body
-            className={`${classNamePrefix}table-body`}
+            className={`${classNamePrefix}table-tbody`}
             style={{ overflowY: 'scroll' }}
           >
             <Row
@@ -298,6 +319,7 @@ function WindowTable<T = any>({
               />
             </Table>
           )}
+          {!data.length && EmptyNode}
           {!!data.length && (
             <List
               height={bodyHeight}
@@ -306,13 +328,13 @@ function WindowTable<T = any>({
               width={effectiveWidth}
               innerElementType={TableBody}
               overscanCount={overscanCount}
+              onScroll={onTableScroll}
             >
               {MemoRowRenderer}
             </List>
           )}
         </div>
       </TableContext.Provider>
-
       {(!height || !width) && (
         /*Measure table dimensions only if explicit height or width are not supplied*/
         <Measurer
