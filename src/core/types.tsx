@@ -46,8 +46,6 @@ export type WindowTableProps<T> = {
   tableCellInnerElementType?: string;
   onTableScroll(arg: any): void;
   empty?: React.ElementType;
-  loading?: false;
-  Spin?: React.ElementType;
 };
 
 export interface RowCellsProps {

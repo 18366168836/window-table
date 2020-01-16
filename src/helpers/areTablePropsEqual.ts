@@ -8,6 +8,7 @@ const otherProps = [
   'className',
   'rowClassName',
   'classNamePrefix',
+  'loading',
 ];
 
 export function areTablePropsEqual(prev: any, next: any) {
@@ -17,5 +18,7 @@ export function areTablePropsEqual(prev: any, next: any) {
   if (!areObjectPropsEqual) {
     return false;
   }
-  return otherProps.every(propName => prev[propName] === next[propName]);
+  return otherProps.every(propName => {
+    return prev[propName] === next[propName];
+  });
 }

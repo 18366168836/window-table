@@ -178,8 +178,6 @@ function WindowTable<T = any>({
   tableCellInnerElementType = 'div',
   onTableScroll,
   empty,
-  loading,
-  Spin,
   ...rest
 }: WindowTableProps<T>) {
   const measurerRowRef = useRef<HTMLElement>(null);
@@ -223,7 +221,6 @@ function WindowTable<T = any>({
   };
 
   const EmptyNode: React.ReactNode = empty || <span>无数据</span>;
-  const SpinComponent: React.ReactNode = Spin || <span>loading</span>;
   return (
     <div
       style={{
@@ -236,20 +233,6 @@ function WindowTable<T = any>({
       className={`${classNamePrefix}table-outer-wrapper`}
       {...rest}
     >
-      <div
-        className={[
-          `${classNamePrefix}table-spin`,
-          loading ? 'loading' : '',
-        ].join(' ')}
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          left: 0,
-        }}
-      >
-        {SpinComponent}
-      </div>
       {!rowHeight && !!data.length && (
         /*Measure row height only if not supplied explicitly*/
         <Table
